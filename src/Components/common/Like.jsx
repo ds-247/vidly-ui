@@ -1,13 +1,8 @@
-import { useState } from "react";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 
-function Like() {
-  const [liked, setLike] = useState(false);
-  function toggleLike() {
-    console.log("like button is clicked");
-    setLike(!liked);
-  }
+function Like(props) {
+  const { liked, onClick: toggleLike } = props;
 
   return (
     <div>

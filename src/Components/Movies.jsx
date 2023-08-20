@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getMovies } from "../services/fakeMovieService";
-import Like from "./Like";
+import Like from "./common/Like";
 
 function Movies() {
   const [movies, setMovies] = useState([...getMovies()]);
@@ -11,6 +11,17 @@ function Movies() {
         return $movie._id !== movie._id;
       });
     });
+  }
+
+  function onLikeToggle(movie) {
+    const updatedMovies = movies.map(($movie) => {
+      if ($movie._id === movie._id) {
+        return { ...$movie, liked: !$movie.liked };
+      }
+      return $movie;
+    });
+
+    setMovies(updatedMovies);
   }
 
   return (
@@ -47,7 +58,10 @@ function Movies() {
                   <td>{numberInStock}</td>
                   <td>{dailyRentalRate}</td>
                   <td>
-                    <Like />
+                    <Like
+                      onClick={() => onLikeToggle($movie)}
+                      liked={$movie.liked}
+                    />
                   </td>
                   <td>
                     <button
