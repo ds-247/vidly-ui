@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getMovies } from "../services/fakeMovieService";
+import Like from "./Like";
 
 function Movies() {
   const [movies, setMovies] = useState([...getMovies()]);
@@ -12,7 +13,6 @@ function Movies() {
     });
   }
 
-  
   return (
     <div className="container">
       <div className="container">
@@ -33,6 +33,7 @@ function Movies() {
               <th scope="col">Stock</th>
               <th scope="col">Rate</th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -45,6 +46,9 @@ function Movies() {
                   <td>{genre.name}</td>
                   <td>{numberInStock}</td>
                   <td>{dailyRentalRate}</td>
+                  <td>
+                    <Like />
+                  </td>
                   <td>
                     <button
                       onClick={() => handleDelete($movie)}
