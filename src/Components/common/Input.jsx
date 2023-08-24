@@ -12,7 +12,7 @@ function Input({ label, name, onChange, value, type, error, errorMessage }) {
       value={value}
       onChange={onChange}
       variant="outlined"
-      sx={{ mb: 2, mt: 4, width: "80%" }}
+      sx={{ mb: 2, mt: 2, width: "80%" }}
     />
   );
 }

@@ -40,6 +40,9 @@ function NavBar() {
             <NavLink className="nav-link" to="/login-form">
               Login
             </NavLink>
+            <NavLink className="nav-link" to="/register-form">
+              Register
+            </NavLink>
           </div>
         </div>
       </div>
