@@ -5,6 +5,7 @@ import MoviesTable from "./MoviesTable";
 import Pagination from "./common/Pagination";
 import paginate from "../utils/paginate";
 import ListGroup from "./common/ListGroup.jsx";
+import SearchBox from "./common/SearchBox";
 import Box from "@mui/material/Box";
 import _ from "lodash";
 import Button from "@mui/material/Button";
@@ -149,16 +150,21 @@ function Movies() {
               flexGrow: 1,
             }}
           >
-            <Link to="/movies/new">
-              <Button variant="contained" sx={{ width: "8rem", mb: "20px" }}>
-                New Movie
-              </Button>
-            </Link>
+            <Button
+              component={Link}
+              to="/movies/new"
+              variant="contained"
+              sx={{width:"8rem" , mb:"10px"}}
+            >
+              New Movie
+            </Button>
             <p>
               {count === 0
                 ? "There are no movies in the database"
                 : `Showing ${moviesToRender.length} movies from the database`}
             </p>
+
+            <SearchBox />
 
             <div className="container">
               {count !== 0 && moviesToRender && (
