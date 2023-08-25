@@ -26,6 +26,7 @@ function Movies() {
   const [count, setCount] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const [startIndex, setStartIndex] = useState(0);
   const [sortCol, setSortCol] = useState({ path: "title", order: "asc" });
   const moviesPerPage = 4;
@@ -49,13 +50,18 @@ function Movies() {
     items = allMovies,
     curPage = currentPage,
     curGenre = selectedGenre,
-    column = sortCol
+    column = sortCol,
+    query = searchQuery
   ) {
     // Filter Movies
-    const filteredItems =
-      curGenre && curGenre._id !== 0
-        ? items.filter(($movie) => $movie.genre._id === curGenre._id)
-        : items;
+    let filteredItems = [];
+    if (curGenre && curGenre._id !== 0) {
+      filteredItems = items.filter((item) => item.genre._id === curGenre._id);
+    } else if (query && query.trim() !== "") {
+      filteredItems = items.filter((item) =>
+        item.title.toLowerCase().startsWith(query.toLowerCase())
+      );
+    } else filteredItems = items;
 
     // Sort Movies
     const sortedMovies = _.orderBy(
@@ -106,6 +112,7 @@ function Movies() {
 
   function handleGenreSelect(genre) {
     setCurrentPage(1);
+    setSearchQuery("");
     setSelectedGenre(genre);
     representMovies(allMovies, 1, genre);
   }
@@ -113,6 +120,13 @@ function Movies() {
   function handleSort(col) {
     setSortCol(col);
     representMovies(allMovies, currentPage, selectedGenre, col);
+  }
+
+  function handleSearch(q) {
+    setSearchQuery(q);
+    setCurrentPage(1);
+    setSelectedGenre(null);
+    representMovies(allMovies, 1, null, sortCol, q);
   }
 
   return (
@@ -154,7 +168,7 @@ function Movies() {
               component={Link}
               to="/movies/new"
               variant="contained"
-              sx={{width:"8rem" , mb:"10px"}}
+              sx={{ width: "8rem", mb: "10px" }}
             >
               New Movie
             </Button>
@@ -164,7 +178,7 @@ function Movies() {
                 : `Showing ${moviesToRender.length} movies from the database`}
             </p>
 
-            <SearchBox />
+            <SearchBox onSearch={handleSearch} query={searchQuery} />
 
             <div className="container">
               {count !== 0 && moviesToRender && (

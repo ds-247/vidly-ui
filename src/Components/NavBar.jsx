@@ -6,9 +6,10 @@ function NavBar() {
       className="navbar navbar-dark navbar-expand-lg"
       style={{
         backgroundColor: "#8fd9ff",
+        height: "70px",
         fontWeight: 900,
         fontSize: "15px",
-        marginBottom: "60px",
+        marginBottom: "16px",
       }}
     >
       <div className="container-fluid">
