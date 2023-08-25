@@ -40,9 +40,9 @@ function App() {
             <Route exact path="/register-form">
               <RegisterForm />
             </Route>
-            {/* <Route exact path="/not-found">
+            <Route exact path="/not-found">
               <NotFound />
-            </Route> */}
+            </Route>
             <Redirect to="/not-found" />
           </Switch>
         </main>

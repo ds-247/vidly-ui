@@ -8,7 +8,7 @@ import ListGroup from "./common/ListGroup.jsx";
 import Box from "@mui/material/Box";
 import _ from "lodash";
 import Button from "@mui/material/Button";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 // replace all bootstrap to material ui
 // replace flex box with grid
@@ -150,10 +150,7 @@ function Movies() {
             }}
           >
             <Link to="/movies/new">
-              <Button
-                variant="contained"
-                sx={{ width: "8rem", mb: "20px" }}
-              >
+              <Button variant="contained" sx={{ width: "8rem", mb: "20px" }}>
                 New Movie
               </Button>
             </Link>

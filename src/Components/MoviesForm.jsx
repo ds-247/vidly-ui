@@ -1,35 +1,74 @@
-import React,{useState} from "react";
-import Input from './common/Input'
-import Joi from 'joi-browser'
+import React, { useState, useEffect } from "react";
+import Input from "./common/Input";
+import Joi from "joi-browser";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { getMovie, saveMovie } from "../services/fakeMovieService";
+import getGenres from "../services/fakeGenreService";
+import DropDown from "./common/DropDown";
 
 function MoviesForm({ match, history }) {
   const [data, setData] = useState({
+    _id: "new",
     title: "",
-    genre: "",
-    stock: "",
-    rate: "",
+    genreId: "",
+    numberInStock: "",
+    dailyRentalRate: "",
   });
+  const [genres, setGenre] = useState([]);
   const [error, setError] = useState({
+    _idError: false,
     titleError: false,
-    passwordError: false,
-    rateError: false,
-    stockError: false,
+    genreError: false,
+    dailyRentalRateError: false,
+    numberInStockError: false,
     titleErrorMessage: "",
     genreErrorMessage: "",
-    rateErrorMessage: "",
-    stockErrorMessage: "",
+    dailyRentalRateErrorMessage: "",
+    numberInStockErrorMessage: "",
   });
 
   const schema = {
+    _id: Joi.string().label("ID"),
     title: Joi.string().required().label("Title"),
-    genre: Joi.string().required().regex(/^[A-Za-z]+$/).label("Genre"),
-    stock: Joi.number().integer().required().min(1).max(100).label("NumberInStock"),
-    rate: Joi.number().required().min(1).max(10).label("Rate"),
+    genreId: Joi.string().required().label("Genre"),
+    numberInStock: Joi.number()
+      .integer()
+      .required()
+      .min(1)
+      .max(100)
+      .label("Number In Stock"),
+    dailyRentalRate: Joi.number().required().min(1).max(10).label("Rate"),
   };
 
-  const validate = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const genresData = await getGenres();
+      setGenre(genresData);
+
+      const movieId = match.params.id;
+      if (movieId === "new") return;
+
+      const movie = getMovie(movieId);
+      if (!movie) return history.replace("/not-found");
+
+      setData(mapToViewModel(movie));
+    };
+
+    fetchData();
+  }, []);
+
+  function mapToViewModel(movie) {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      genreId: movie.genre._id,
+      numberInStock: movie.numberInStock,
+      dailyRentalRate: movie.dailyRentalRate,
+    };
+  }
+
+  function validate() {
     const { error } = Joi.validate(data, schema, { abortEarly: false });
     if (!error) return null;
 
@@ -40,8 +79,10 @@ function MoviesForm({ match, history }) {
       anyError[`${item.path[0]}ErrorMessage`] = item.message;
     }
 
+    console.log(anyError);
+
     return anyError;
-  };
+  }
 
   const validateField = (name, value) => {
     const field = { [name]: value };
@@ -72,17 +113,21 @@ function MoviesForm({ match, history }) {
     setError($error);
   };
 
+  function handleGenreSelect(id) {
+    setData((prevAccount) => ({
+      ...prevAccount,
+      genreId: id,
+    }));
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const anyError = validate();
-
     setError(anyError || {});
-
     if (anyError) return;
 
-    // Perform further actions, like calling the server
-    console.log("Adding new movie ...");
+    saveMovie(data);
+    history.push("/movies");
   };
 
   return (
@@ -97,33 +142,33 @@ function MoviesForm({ match, history }) {
           error={error.titleError}
           errorMessage={error.titleErrorMessage}
         />
-        <Input
-          name="genre"
+        <DropDown
+          items={genres}
           label="Genre"
-          type="genre"
-          onChange={handleInputChange}
-          value={data.genre}
+          selectedItem={data.genreId}
           error={error.genreError}
           errorMessage={error.genreErrorMessage}
+          onChange={handleGenreSelect}
         />
+
         <Input
-          name="stock"
+          name="numberInStock"
           label="NumberInStock"
           onChange={handleInputChange}
-          value={data.stock}
-          error={error.stockError}
-          errorMessage={error.stockErrorMessage}
+          value={data.numberInStock}
+          error={error.numberInStockError}
+          errorMessage={error.numberInStockErrorMessage}
         />
         <Input
-          name="rate"
+          name="dailyRentalRate"
           label="Rate"
           onChange={handleInputChange}
-          value={data.rate}
-          error={error.rateError}
-          errorMessage={error.rateErrorMessage}
+          value={data.dailyRentalRate}
+          error={error.dailyRentalRateError}
+          errorMessage={error.dailyRentalRateErrorMessage}
         />
       </Box>
-      <Button  type="submit" variant="contained" disabled={validate() !== null}>
+      <Button type="submit" variant="contained" disabled={validate() !== null}>
         Add Movie
       </Button>
     </form>
