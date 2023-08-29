@@ -3,8 +3,8 @@ import Input from "./common/Input";
 import Joi from "joi-browser";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
-import getGenres from "../services/fakeGenreService";
+import { getMovie, saveMovie } from "../services/movieService";
+import getGenres from "../services/genreService";
 import DropDown from "./common/DropDown";
 
 function MoviesForm({ match, history }) {
@@ -43,13 +43,13 @@ function MoviesForm({ match, history }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const genresData = await getGenres();
+      const { data: genresData } = await getGenres();
       setGenre(genresData);
 
       const movieId = match.params.id;
       if (movieId === "new") return;
 
-      const movie = getMovie(movieId);
+      const { data: movie } = await getMovie(movieId);
       if (!movie) return history.replace("/not-found");
 
       setData(mapToViewModel(movie));
@@ -78,8 +78,6 @@ function MoviesForm({ match, history }) {
       anyError[`${item.path[0]}Error`] = true;
       anyError[`${item.path[0]}ErrorMessage`] = item.message;
     }
-
-    console.log(anyError);
 
     return anyError;
   }
@@ -120,13 +118,13 @@ function MoviesForm({ match, history }) {
     }));
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const anyError = validate();
     setError(anyError || {});
     if (anyError) return;
 
-    saveMovie(data);
+    await saveMovie(data);
     history.push("/movies");
   };
 

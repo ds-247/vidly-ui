@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getMovies } from "../services/fakeMovieService";
-import getGenres from "../services/fakeGenreService";
+import { deleteMovie, getMovies, saveMovie } from "../services/movieService";
+import getGenres from "../services/genreService";
 import MoviesTable from "./MoviesTable";
 import Pagination from "./common/Pagination";
 import paginate from "../utils/paginate";
@@ -33,18 +33,18 @@ function Movies() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const moviesData = await getMovies();
-      const genreData = [{ _id: 0, name: "All Genres" }, ...getGenres()];
+      const { data: moviesData } = await getMovies();
+      let { data: genreData } = await getGenres();
+      genreData = [{ _id: 0, name: "All Genres" }, ...genreData];
 
       setAllMovies(moviesData);
       setGenre(genreData);
-      // setCurrentPage(1);
 
       representMovies(moviesData);
     };
 
     fetchData();
-  }, []);
+  }, [allMovies, currentPage, selectedGenre, sortCol, searchQuery]);
 
   function representMovies(
     items = allMovies,
@@ -87,46 +87,59 @@ function Movies() {
     setStartIndex(newStartIndex);
 
     setCurrentPage(curPage);
-    representMovies(allMovies, curPage);
   }
 
-  function onLikeToggle(movie) {
-    const updatedMovies = allMovies.map(($movie) => {
-      if ($movie._id === movie._id) {
-        return { ...$movie, liked: !$movie.liked };
-      }
-      return $movie;
-    });
+  async function onLikeToggle(movie) {
+    movie.liked = !movie.liked;
 
-    setAllMovies(updatedMovies);
-    representMovies(updatedMovies, currentPage);
+    const body = _.pick(movie, [
+      "_id",
+      "title",
+      "dailyRentalRate",
+      "numberInStock",
+      "liked",
+    ]);
+    body.genreId = movie.genre._id;
+
+    try {
+      await saveMovie(body);
+    } catch (ex) {}
   }
 
-  function handleDelete(movie) {
+  // optimistic delete method
+  async function handleDelete(movie) {
+    const originalMovies = allMovies;
     const updatedMovies = allMovies.filter(
       ($movie) => $movie._id !== movie._id
     );
     setAllMovies(updatedMovies);
-    representMovies(updatedMovies, currentPage);
+
+    try {
+      await deleteMovie(movie._id);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // toast.error("The movie has already been deleted...");
+        console.log("here goes the toast mssg movie is already deleted");
+
+        setAllMovies(originalMovies);
+      }
+    }
   }
 
   function handleGenreSelect(genre) {
     setCurrentPage(1);
     setSearchQuery("");
     setSelectedGenre(genre);
-    representMovies(allMovies, 1, genre);
   }
 
   function handleSort(col) {
     setSortCol(col);
-    representMovies(allMovies, currentPage, selectedGenre, col);
   }
 
   function handleSearch(q) {
     setSearchQuery(q);
     setCurrentPage(1);
     setSelectedGenre(null);
-    representMovies(allMovies, 1, null, sortCol, q);
   }
 
   return (

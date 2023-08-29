@@ -7,6 +7,7 @@ import NotFound from "./Components/NotFound";
 import Rentals from "./Components/Rentals";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
+import "react-toastify/dist/ReactToastify.css";
 import {
   BrowserRouter as Router,
   Switch,

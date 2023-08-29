@@ -1,4 +1,7 @@
+import axios from 'axios';
 import * as genresAPI from "./fakeGenreService";
+
+const apiEndpoint = "http://localhost:3000/api/movies";
 
 const movies = [
   {
@@ -68,12 +71,16 @@ const movies = [
   },
 ];
 
-export function getMovies() {
-  return movies;
+export async function getMovies() {
+  const { data } = await axios.get(apiEndpoint); 
+  return data;
 }
 
-export function getMovie(id) {
-  return movies.find((m) => m._id === id);
+export async function getMovie(id) {
+  const movie = await axios.get(apiEndpoint+`/${id}`);
+  if(!movie) return {};
+
+  return movie;
 }
 
 export function saveMovie(movie) {
