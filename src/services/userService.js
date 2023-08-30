@@ -1,6 +1,5 @@
 import http from "./httpService";
-import config from "../config.json";
-const apiEndPoint = config.apiUrl + "/users";
+const apiEndPoint = "/users";
 
 export async function register(user) {
     
