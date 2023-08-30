@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 
-function NavBar() {
+function NavBar({ user }) {
   return (
     <nav
       className="navbar navbar-dark navbar-expand-lg"
@@ -38,12 +38,26 @@ function NavBar() {
             <NavLink className="nav-link" to="/rentals">
               Rentals
             </NavLink>
-            <NavLink className="nav-link" to="/login-form">
-              Login
-            </NavLink>
-            <NavLink className="nav-link" to="/register-form">
-              Register
-            </NavLink>
+            {!user && (
+              <>
+                <NavLink className="nav-link" to="/login-form">
+                  Login
+                </NavLink>
+                <NavLink className="nav-link" to="/register-form">
+                  Register
+                </NavLink>
+              </>
+            )}
+            {user && (
+              <>
+                <NavLink className="nav-link" to="/me">
+                  {user.name}
+                </NavLink>
+                <NavLink className="nav-link" to="/logout">
+                  Logout
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
       </div>

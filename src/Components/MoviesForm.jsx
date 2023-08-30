@@ -56,7 +56,7 @@ function MoviesForm({ match, history }) {
     };
 
     fetchData();
-  }, []);
+  }, [history, match.params.id]);
 
   function mapToViewModel(movie) {
     return {
@@ -124,8 +124,13 @@ function MoviesForm({ match, history }) {
     setError(anyError || {});
     if (anyError) return;
 
-    await saveMovie(data);
-    history.push("/movies");
+    try {
+      await saveMovie(data);
+      history.push("/movies");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 401) {
+      }
+    }
   };
 
   return (

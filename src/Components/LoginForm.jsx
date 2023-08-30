@@ -3,6 +3,8 @@ import Joi from "joi-browser";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import Input from "./common/Input";
+import auth from "../services/authService";
+import { Redirect } from "react-router-dom";
 
 function LoginForm() {
   const [account, setAccount] = useState({ username: "", password: "" });
@@ -61,7 +63,7 @@ function LoginForm() {
     setError($error);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const anyError = validate();
@@ -70,36 +72,55 @@ function LoginForm() {
 
     if (anyError) return;
 
-    // Perform further actions, like calling the server
-    console.log("Logging in...");
+    try {
+      await auth.login(account.username, account.password);
+      window.location = "/";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const err = { ...error };
+        err.usernameError = true;
+        err.usernameErrorMessage = ex.response.data;
+        setError(err);
+      }
+    }
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit}>
-      <h1>Login Form</h1>
-      <Box>
-        <Input
-          name="username"
-          label="UserName"
-          onChange={handleInputChange}
-          value={account.username}
-          error={error.usernameError}
-          errorMessage={error.usernameErrorMessage}
-        />
-        <Input
-          name="password"
-          label="Password"
-          type="password"
-          onChange={handleInputChange}
-          value={account.password}
-          error={error.passwordError}
-          errorMessage={error.passwordErrorMessage}
-        />
-      </Box>
-      <Button type="submit" variant="contained" disabled={validate() !== null}>
-        LogIn
-      </Button>
-    </form>
+    <>
+      {auth.getCurrentUser() ? (
+        <Redirect to="/" />
+      ) : (
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <h1>Login Form</h1>
+          <Box>
+            <Input
+              name="username"
+              label="UserName"
+              onChange={handleInputChange}
+              value={account.username}
+              error={error.usernameError}
+              errorMessage={error.usernameErrorMessage}
+            />
+            <Input
+              name="password"
+              label="Password"
+              type="password"
+              onChange={handleInputChange}
+              value={account.password}
+              error={error.passwordError}
+              errorMessage={error.passwordErrorMessage}
+            />
+          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={validate() !== null}
+          >
+            LogIn
+          </Button>
+        </form>
+      )}
+    </>
   );
 }
 

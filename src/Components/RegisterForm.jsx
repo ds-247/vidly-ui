@@ -3,6 +3,8 @@ import Joi from "joi-browser";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import Input from "./common/Input";
+import { register } from "../services/userService";
+import auth from "../services/authService";
 
 function RegisterForm() {
   const [account, setAccount] = useState({
@@ -68,7 +70,7 @@ function RegisterForm() {
     setError($error);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const anyError = validate();
@@ -78,7 +80,20 @@ function RegisterForm() {
     if (anyError) return;
 
     // Perform further actions, like calling the server
-    console.log("Registering User ...");
+
+    try {
+      const response = await register(account);
+      auth.loginWithJwt(response.headers["x-auth-token"]);
+      // localStorage.setItem('token',response.headers['x-auth-token']);
+      window.location = "/";
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const err = error;
+        err.usernameError = true;
+        err.usernameErrorMessage = ex.response.data;
+        setError(err);
+      }
+    }
   };
 
   return (

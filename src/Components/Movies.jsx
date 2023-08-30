@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { deleteMovie, getMovies, saveMovie } from "../services/movieService";
 import getGenres from "../services/genreService";
 import MoviesTable from "./MoviesTable";
@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 // delete krne pe agar ek bhi item na bache to usse prev page pe le jao
 // destructure every component where ever needed
 
-function Movies() {
+function Movies({ user }) {
   const [allMovies, setAllMovies] = useState([]);
   const [genres, setGenre] = useState([]);
   const [moviesToRender, setMoviesToRender] = useState();
@@ -27,9 +27,47 @@ function Movies() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [startIndex, setStartIndex] = useState(0);
+  // const [startIndex, setStartIndex] = useState(0);
   const [sortCol, setSortCol] = useState({ path: "title", order: "asc" });
   const moviesPerPage = 4;
+
+  const representMovies = useCallback(
+    (
+      items = allMovies,
+      curPage = currentPage,
+      curGenre = selectedGenre,
+      column = sortCol,
+      query = searchQuery
+    ) => {
+      let filteredItems = [];
+      if (curGenre && curGenre._id !== 0) {
+        filteredItems = items.filter((item) => item.genre._id === curGenre._id);
+      } else if (query && query.trim() !== "") {
+        filteredItems = items.filter((item) =>
+          item.title.toLowerCase().startsWith(query.toLowerCase())
+        );
+      } else filteredItems = items;
+
+      // Sort Movies
+      const sortedMovies = _.orderBy(
+        filteredItems,
+        column["path"],
+        column["order"]
+      );
+
+      // Paginate Movies
+      const newMoviesToRender = paginate(sortedMovies, curPage, moviesPerPage);
+
+      // set states that depends on movies (cur page is not set here )
+      const count = filteredItems.length;
+      const pages = Math.ceil(count / moviesPerPage);
+
+      setCount(count);
+      setTotalPages(pages);
+      setMoviesToRender(newMoviesToRender);
+    },
+    [allMovies, currentPage, selectedGenre, sortCol, searchQuery]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,47 +82,18 @@ function Movies() {
     };
 
     fetchData();
-  }, [allMovies, currentPage, selectedGenre, sortCol, searchQuery]);
-
-  function representMovies(
-    items = allMovies,
-    curPage = currentPage,
-    curGenre = selectedGenre,
-    column = sortCol,
-    query = searchQuery
-  ) {
-    // Filter Movies
-    let filteredItems = [];
-    if (curGenre && curGenre._id !== 0) {
-      filteredItems = items.filter((item) => item.genre._id === curGenre._id);
-    } else if (query && query.trim() !== "") {
-      filteredItems = items.filter((item) =>
-        item.title.toLowerCase().startsWith(query.toLowerCase())
-      );
-    } else filteredItems = items;
-
-    // Sort Movies
-    const sortedMovies = _.orderBy(
-      filteredItems,
-      column["path"],
-      column["order"]
-    );
-
-    // Paginate Movies
-    const newMoviesToRender = paginate(sortedMovies, curPage, moviesPerPage);
-
-    // set states that depends on movies (cur page is not set here )
-    const count = filteredItems.length;
-    const pages = Math.ceil(count / moviesPerPage);
-
-    setCount(count);
-    setTotalPages(pages);
-    setMoviesToRender(newMoviesToRender);
-  }
+  }, [
+    allMovies,
+    currentPage,
+    selectedGenre,
+    sortCol,
+    searchQuery,
+    representMovies,
+  ]);
 
   function handlePageChange(e, curPage) {
-    const newStartIndex = (curPage - 1) * moviesPerPage;
-    setStartIndex(newStartIndex);
+    // const newStartIndex = (curPage - 1) * moviesPerPage;
+    // setStartIndex(newStartIndex);
 
     setCurrentPage(curPage);
   }
@@ -119,7 +128,7 @@ function Movies() {
     } catch (error) {
       if (error.response && error.response.status === 404) {
         // toast.error("The movie has already been deleted...");
-        console.log("here goes the toast mssg movie is already deleted");
+        // console.log("here goes the toast mssg movie is already deleted");
 
         setAllMovies(originalMovies);
       }
@@ -177,14 +186,16 @@ function Movies() {
               flexGrow: 1,
             }}
           >
-            <Button
-              component={Link}
-              to="/movies/new"
-              variant="contained"
-              sx={{ width: "8rem", mb: "10px" }}
-            >
-              New Movie
-            </Button>
+            {user && (
+              <Button
+                component={Link}
+                to="/movies/new"
+                variant="contained"
+                sx={{ width: "8rem", mb: "10px" }}
+              >
+                New Movie
+              </Button>
+            )}
             <p>
               {count === 0
                 ? "There are no movies in the database"
@@ -219,3 +230,41 @@ function Movies() {
 }
 
 export default Movies;
+
+// const representMovies = useCallback(
+//   (
+//     items = allMovies,
+//     curPage = currentPage,
+//     curGenre = selectedGenre,
+//     column = sortCol,
+//     query = searchQuery
+//   ) => {
+//     let filteredItems = [];
+//     if (curGenre && curGenre._id !== 0) {
+//       filteredItems = items.filter((item) => item.genre._id === curGenre._id);
+//     } else if (query && query.trim() !== "") {
+//       filteredItems = items.filter((item) =>
+//         item.title.toLowerCase().startsWith(query.toLowerCase())
+//       );
+//     } else filteredItems = items;
+
+//     // Sort Movies
+//     const sortedMovies = _.orderBy(
+//       filteredItems,
+//       column["path"],
+//       column["order"]
+//     );
+
+//     // Paginate Movies
+//     const newMoviesToRender = paginate(sortedMovies, curPage, moviesPerPage);
+
+//     // set states that depends on movies (cur page is not set here )
+//     const count = filteredItems.length;
+//     const pages = Math.ceil(count / moviesPerPage);
+
+//     setCount(count);
+//     setTotalPages(pages);
+//     setMoviesToRender(newMoviesToRender);
+//   },
+//   [allMovies, currentPage, selectedGenre, sortCol, searchQuery]
+// );

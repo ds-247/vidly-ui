@@ -5,11 +5,12 @@ import TableBody from "./common/TableBody";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import auth from "../services/authService";
 
 function MoviesTable(props) {
   const { movies, onLike, onDelete, onSort, sortColumn } = props;
 
-  const cols = [
+  const initialCols = [
     {
       path: "title",
       label: "Title",
@@ -26,20 +27,25 @@ function MoviesTable(props) {
         <Like onClick={() => onLike(movie)} liked={movie.liked} />
       ),
     },
-    {
-      key: "delete",
-      content: (movie) => (
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          color="error"
-          onClick={() => onDelete(movie)}
-        >
-          Delete
-        </Button>
-      ),
-    },
   ];
+
+  const deleteCol = {
+    key: "delete",
+    content: (movie) => (
+      <Button
+        variant="outlined"
+        startIcon={<DeleteIcon />}
+        color="error"
+        onClick={() => onDelete(movie)}
+      >
+        Delete
+      </Button>
+    ),
+  };
+
+  const cols = auth.getCurrentUser()
+    ? [...initialCols, deleteCol]
+    : initialCols;
 
   return (
     <table className="table">
