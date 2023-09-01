@@ -44,7 +44,6 @@ function RegisterForm() {
   const validateField = (name, value) => {
     const field = { [name]: value };
     const fieldSchema = { [name]: schema[name] };
-
     const { error } = Joi.validate(field, fieldSchema);
     return error ? error.details[0].message : null;
   };
@@ -53,6 +52,7 @@ function RegisterForm() {
     const { name, value } = e.target;
 
     const $error = { ...error };
+
     const errorMessage = validateField(name, value);
 
     if (errorMessage) {
@@ -79,12 +79,9 @@ function RegisterForm() {
 
     if (anyError) return;
 
-    // Perform further actions, like calling the server
-
     try {
       const response = await register(account);
       auth.loginWithJwt(response.headers["x-auth-token"]);
-      // localStorage.setItem('token',response.headers['x-auth-token']);
       window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
@@ -122,7 +119,7 @@ function RegisterForm() {
           label="Name"
           onChange={handleInputChange}
           value={account.name}
-          error={error.name}
+          error={error.nameError}
           errorMessage={error.nameErrorMessage}
         />
       </Box>
