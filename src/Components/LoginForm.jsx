@@ -67,13 +67,13 @@ function LoginForm() {
     event.preventDefault();
 
     const anyError = validate();
-
     setError(anyError || {});
 
     if (anyError) return;
 
     try {
       await auth.login(account.username, account.password);
+
       window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {

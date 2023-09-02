@@ -24,6 +24,7 @@ function App() {
   useEffect(() => {
     const fetchData = () => {
       const user = auth.getCurrentUser();
+
       setUser(user);
     };
 
