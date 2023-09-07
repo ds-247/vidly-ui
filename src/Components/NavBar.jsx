@@ -1,67 +1,168 @@
-import { Link, NavLink } from "react-router-dom";
+import React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import "../ComponentStyle/AppBar.css";
+import UserOptions from "./common/UserOptions";
+
+import { NavLink } from "react-router-dom";
 
 function NavBar({ user }) {
+  const pages = [
+    { label: "Movies", to: "/movies" },
+    { label: "Customers", to: "/customers" },
+    { label: "Rentals", to: "/rentals" },
+    { label: "Login", to: "/login-form", condition: !user },
+    { label: "Register", to: "/register-form", condition: !user },
+  ];
+
+  const settings = [
+    { label: user ? user.name : "", to: "/me", condition: user },
+    { label: "Logout", to: "/logout", condition: user },
+  ];
+
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
   return (
-    <nav
-      className="navbar navbar-dark navbar-expand-lg"
-      style={{
-        backgroundColor: "#8fd9ff",
-        height: "70px",
-        fontWeight: 900,
-        fontSize: "15px",
-        marginBottom: "16px",
-      }}
-    >
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          VIDLY
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav">
-            <NavLink className="nav-link" aria-current="page" to="/movies">
-              Movies
-            </NavLink>
-            <NavLink className="nav-link" to="/customers">
-              Customers
-            </NavLink>
-            <NavLink className="nav-link" to="/rentals">
-              Rentals
-            </NavLink>
-            {!user && (
-              <>
-                <NavLink className="nav-link" to="/login-form">
-                  Login
+    <AppBar position="static" className="myAppBar">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              VIDLY
+            </Typography>
+          
+
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
+            >
+              {pages.map((page, index) => {
+                const shouldRender =
+                  page.condition === undefined || page.condition;
+
+                if (shouldRender) {
+                  return (
+                    <NavLink
+                      key={`nav-link-${index}`}
+                      className="nav-page"
+                      aria-current="page"
+                      to={page.to}
+                    >
+                      <MenuItem
+                        key={`menu-item-${index}`}
+                        onClick={handleCloseNavMenu}
+                      >
+                        <Typography textAlign="center">{page.label}</Typography>
+                      </MenuItem>
+                    </NavLink>
+                  );
+                }
+
+                return null;
+              })}
+            </Menu>
+          </Box>
+          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            VIDLY
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((link, index) =>
+              link?.condition === undefined || link.condition ? (
+                <NavLink
+                  key={index}
+                  className="nav-link"
+                  aria-current="page"
+                  to={link.to}
+                >
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {link.label}
+                  </Button>
                 </NavLink>
-                <NavLink className="nav-link" to="/register-form">
-                  Register
-                </NavLink>
-              </>
+              ) : null
             )}
-            {user && (
-              <>
-                <NavLink className="nav-link" to="/me">
-                  {user.name}
-                </NavLink>
-                <NavLink className="nav-link" to="/logout">
-                  Logout
-                </NavLink>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
+          </Box>
+
+          {user && <UserOptions user={user} settings={settings} />}
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
+
 export default NavBar;
