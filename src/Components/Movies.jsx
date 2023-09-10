@@ -9,6 +9,7 @@ import SearchBox from "./common/SearchBox";
 import Box from "@mui/material/Box";
 import _ from "lodash";
 import Button from "@mui/material/Button";
+import Loader from './common/Loader';
 import { Link } from "react-router-dom";
 
 // replace all bootstrap to material ui
@@ -27,6 +28,7 @@ function Movies({ user }) {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dataFetched, setDataFetched] = useState(false);
   // const [startIndex, setStartIndex] = useState(0);
   const [sortCol, setSortCol] = useState({ path: "title", order: "asc" });
   const moviesPerPage = 4;
@@ -72,6 +74,10 @@ function Movies({ user }) {
   useEffect(() => {
     const fetchData = async () => {
       const { data: moviesData } = await getMovies();
+
+      if(moviesData) setDataFetched(true);
+      else setDataFetched(false);
+
       let { data: genreData } = await getGenres();
       genreData = [{ _id: 0, name: "All Genres" }, ...genreData];
 
@@ -153,6 +159,8 @@ function Movies({ user }) {
 
   return (
     <>
+    {!dataFetched ? 
+      <Loader /> :
       <div style={{ width: "100%" }}>
         <Box
           sx={{
@@ -225,46 +233,9 @@ function Movies({ user }) {
           </Box>
         </Box>
       </div>
+    }
     </>
   );
 }
 
 export default Movies;
-
-// const representMovies = useCallback(
-//   (
-//     items = allMovies,
-//     curPage = currentPage,
-//     curGenre = selectedGenre,
-//     column = sortCol,
-//     query = searchQuery
-//   ) => {
-//     let filteredItems = [];
-//     if (curGenre && curGenre._id !== 0) {
-//       filteredItems = items.filter((item) => item.genre._id === curGenre._id);
-//     } else if (query && query.trim() !== "") {
-//       filteredItems = items.filter((item) =>
-//         item.title.toLowerCase().startsWith(query.toLowerCase())
-//       );
-//     } else filteredItems = items;
-
-//     // Sort Movies
-//     const sortedMovies = _.orderBy(
-//       filteredItems,
-//       column["path"],
-//       column["order"]
-//     );
-
-//     // Paginate Movies
-//     const newMoviesToRender = paginate(sortedMovies, curPage, moviesPerPage);
-
-//     // set states that depends on movies (cur page is not set here )
-//     const count = filteredItems.length;
-//     const pages = Math.ceil(count / moviesPerPage);
-
-//     setCount(count);
-//     setTotalPages(pages);
-//     setMoviesToRender(newMoviesToRender);
-//   },
-//   [allMovies, currentPage, selectedGenre, sortCol, searchQuery]
-// );
