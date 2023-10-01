@@ -11,20 +11,24 @@ function RegisterForm() {
     username: "",
     password: "",
     name: "",
+    contact:"",
   });
   const [error, setError] = useState({
     usernameError: false,
     passwordError: false,
     nameError: false,
+    contactError: false,
     usernameErrorMessage: "",
     passwordErrorMessage: "",
     nameErrorMessage: "",
+    contactErrorMessage: "",
   });
 
   const schema = {
     username: Joi.string().email().required().label("Username"),
     password: Joi.string().min(8).required().label("Password"),
     name: Joi.string().min(5).required().label("Name"),
+    contact: Joi.string().min(3).required().label("Contact"),
   };
 
   const validate = () => {
@@ -121,6 +125,14 @@ function RegisterForm() {
           value={account.name}
           error={error.nameError}
           errorMessage={error.nameErrorMessage}
+        />
+        <Input
+          name="contact"
+          label="Contact"
+          onChange={handleInputChange}
+          value={account.contact}
+          error={error.contactError}
+          errorMessage={error.contactErrorMessage}
         />
       </Box>
       <Button type="submit" variant="contained" disabled={validate() !== null}>

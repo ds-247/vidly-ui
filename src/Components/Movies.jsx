@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { deleteMovie, getMovies, saveMovie } from "../services/movieService";
-import getGenres from "../services/genreService";
+import {getGenres} from "../services/genreService";
 import MoviesTable from "./MoviesTable";
 import Pagination from "./common/Pagination";
 import paginate from "../utils/paginate";
@@ -98,9 +98,6 @@ function Movies({ user }) {
   ]);
 
   function handlePageChange(e, curPage) {
-    // const newStartIndex = (curPage - 1) * moviesPerPage;
-    // setStartIndex(newStartIndex);
-
     setCurrentPage(curPage);
   }
 

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Movies from "./Components/Movies";
 import NavBar from "./Components/NavBar";
-import Customers from "./Components/Customers";
+import Users from "./Components/Users";
 import MoviesForm from "./Components/MoviesForm";
 import NotFound from "./Components/NotFound";
+import GenresTable from './Components/GenresTable';
 import Rentals from "./Components/Rentals";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
@@ -31,6 +32,14 @@ function App() {
     fetchData();
   }, []);
 
+  if (!user)
+    return (
+      <Router>
+        {" "}
+        <LoginForm />
+      </Router>
+    );
+
   return (
     <>
       <Router>
@@ -46,11 +55,14 @@ function App() {
             <Route exact path="/rentals">
               <Rentals />
             </Route>
-            <Route exact path="/customers">
-              <Customers />
+            <Route exact path="/users">
+              <Users />
             </Route>
             <Route exact path="/login-form">
               <LoginForm />
+            </Route>
+            <Route exact path="/genres">
+              <GenresTable />
             </Route>
             <Route exact path="/register-form">
               <RegisterForm />

@@ -18,10 +18,10 @@ import { NavLink } from "react-router-dom";
 function NavBar({ user }) {
   const pages = [
     { label: "Movies", to: "/movies" },
-    { label: "Customers", to: "/customers" },
+    { label: "Users", to: "/users" },
     { label: "Rentals", to: "/rentals" },
-    { label: "Login", to: "/login-form", condition: !user },
-    { label: "Register", to: "/register-form", condition: !user },
+    { label: "Genres", to: "/genres" },
+    { label: "Register", to: "/register-form",},
   ];
 
   const settings = [
@@ -44,25 +44,24 @@ function NavBar({ user }) {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              VIDLY
-            </Typography>
-          
+
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            VIDLY
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -119,7 +118,7 @@ function NavBar({ user }) {
               })}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap

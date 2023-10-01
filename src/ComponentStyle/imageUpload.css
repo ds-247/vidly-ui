@@ -1,0 +1,12 @@
+.imageUpload-container{
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.inputImage img{
+    border-radius: 10px;
+    width: 151px;
+    height: auto;
+    margin-right: 66px;
+    box-shadow: 0 0 15px black;
+}

@@ -4,13 +4,15 @@ import Joi from "joi-browser";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { getMovie, saveMovie } from "../services/movieService";
-import getGenres from "../services/genreService";
+import {getGenres} from "../services/genreService";
 import DropDown from "./common/DropDown";
+import ImageUpload from "./common/ImageUpload";
 
 function MoviesForm({ match, history }) {
   const [data, setData] = useState({
     _id: "new",
     title: "",
+    movieImage: "",
     genreId: "",
     numberInStock: "",
     dailyRentalRate: "",
@@ -19,11 +21,13 @@ function MoviesForm({ match, history }) {
   const [error, setError] = useState({
     _idError: false,
     titleError: false,
+    movieImageError: false,
     genreError: false,
     dailyRentalRateError: false,
     numberInStockError: false,
     titleErrorMessage: "",
     genreErrorMessage: "",
+    movieImageErrorMessage: "",
     dailyRentalRateErrorMessage: "",
     numberInStockErrorMessage: "",
   });
@@ -31,6 +35,7 @@ function MoviesForm({ match, history }) {
   const schema = {
     _id: Joi.string().label("ID"),
     title: Joi.string().required().label("Title"),
+    movieImage: Joi.string().required().label("Movie Image"),
     genreId: Joi.string().required().label("Genre"),
     numberInStock: Joi.number()
       .integer()
@@ -52,6 +57,8 @@ function MoviesForm({ match, history }) {
       const { data: movie } = await getMovie(movieId);
       if (!movie) return history.replace("/not-found");
 
+      // console.log("movie data recieved ",movie.movieImage)
+
       setData(mapToViewModel(movie));
     };
 
@@ -62,6 +69,7 @@ function MoviesForm({ match, history }) {
     return {
       _id: movie._id,
       title: movie.title,
+      movieImage: movie.movieImage,
       genreId: movie.genre._id,
       numberInStock: movie.numberInStock,
       dailyRentalRate: movie.dailyRentalRate,
@@ -90,6 +98,13 @@ function MoviesForm({ match, history }) {
     return error ? error.details[0].message : null;
   };
 
+  function handleGenreSelect(id) {
+    setData((prevAccount) => ({
+      ...prevAccount,
+      genreId: id,
+    }));
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -111,12 +126,12 @@ function MoviesForm({ match, history }) {
     setError($error);
   };
 
-  function handleGenreSelect(id) {
-    setData((prevAccount) => ({
-      ...prevAccount,
-      genreId: id,
+  const handleImageChange = (base64String) => {
+    setData(prevAccount =>({
+      ...prevAccount, 
+      movieImage : base64String
     }));
-  }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -170,6 +185,7 @@ function MoviesForm({ match, history }) {
           error={error.dailyRentalRateError}
           errorMessage={error.dailyRentalRateErrorMessage}
         />
+        <ImageUpload data={data} onImageChange={handleImageChange} />
       </Box>
       <Button type="submit" variant="contained" disabled={validate() !== null}>
         Add Movie

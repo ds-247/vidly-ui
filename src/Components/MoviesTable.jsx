@@ -1,5 +1,5 @@
 import React from "react";
-import Like from "./common/Like";
+// import Like from "./common/Like";
 import TableHeader from "./common/TableHeader";
 import TableBody from "./common/TableBody";
 import { Link } from "react-router-dom";
@@ -8,7 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import auth from "../services/authService";
 
 function MoviesTable(props) {
-  const { movies, onLike, onDelete, onSort, sortColumn } = props;
+  // const { movies, onLike, onDelete, onSort, sortColumn } = props;
+  const { movies, onDelete, onSort, sortColumn } = props;
 
   const initialCols = [
     {
@@ -21,12 +22,12 @@ function MoviesTable(props) {
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rate" },
-    {
-      key: "like",
-      content: (movie) => (
-        <Like onClick={() => onLike(movie)} liked={movie.liked} />
-      ),
-    },
+    // {
+    //   key: "like",
+    //   content: (movie) => (
+    //     <Like onClick={() => onLike(movie)} liked={movie.liked} />
+    //   ),
+    // },
   ];
 
   const deleteCol = {
