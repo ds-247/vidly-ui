@@ -91,8 +91,8 @@ function LoginForm() {
       {auth.getCurrentUser() ? (
         <Redirect to="/" />
       ) : (
-          <div className="background-image">
-        <div className="login-container">
+        <div className="background-image">
+          <div className="login-container">
             <form
               className="login-form"
               autoComplete="off"

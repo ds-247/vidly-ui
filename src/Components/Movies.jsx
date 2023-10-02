@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { deleteMovie, getMovies, saveMovie } from "../services/movieService";
-import {getGenres} from "../services/genreService";
+import { getGenres } from "../services/genreService";
 import MoviesTable from "./MoviesTable";
 import Pagination from "./common/Pagination";
 import paginate from "../utils/paginate";
@@ -9,7 +9,7 @@ import SearchBox from "./common/SearchBox";
 import Box from "@mui/material/Box";
 import _ from "lodash";
 import Button from "@mui/material/Button";
-import Loader from './common/Loader';
+import Loader from "./common/Loader";
 import { Link } from "react-router-dom";
 
 // replace all bootstrap to material ui
@@ -75,7 +75,7 @@ function Movies({ user }) {
     const fetchData = async () => {
       const { data: moviesData } = await getMovies();
 
-      if(moviesData) setDataFetched(true);
+      if (moviesData) setDataFetched(true);
       else setDataFetched(false);
 
       let { data: genreData } = await getGenres();
@@ -156,81 +156,82 @@ function Movies({ user }) {
 
   return (
     <>
-    {!dataFetched ? 
-      <Loader /> :
-      <div style={{ width: "100%" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            p: 1,
-            m: 1,
-          }}
-        >
+      {!dataFetched ? (
+        <Loader />
+      ) : (
+        <div style={{ width: "100%" }}>
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               p: 1,
               m: 1,
-              width: "20%",
             }}
           >
-            <ListGroup
-              items={genres}
-              selectedItem={selectedGenre}
-              onItemSelect={handleGenreSelect}
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              p: 1,
-              m: 1,
-              flexGrow: 1,
-            }}
-          >
-            {user && (
-              <Button
-                component={Link}
-                to="/movies/new"
-                variant="contained"
-                sx={{ width: "8rem", mb: "10px" }}
-              >
-                New Movie
-              </Button>
-            )}
-            <p>
-              {count === 0
-                ? "There are no movies in the database"
-                : `Showing ${moviesToRender.length} movies from the database`}
-            </p>
-
-            <SearchBox onSearch={handleSearch} query={searchQuery} />
-
-            <div className="container">
-              {count !== 0 && moviesToRender && (
-                <div className="container">
-                  <MoviesTable
-                    sortColumn={sortCol}
-                    movies={moviesToRender}
-                    onLike={onLikeToggle}
-                    onDelete={handleDelete}
-                    onSort={handleSort}
-                  />
-                  <Pagination
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                    page={currentPage}
-                  />
-                </div>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                p: 1,
+                m: 1,
+                width: "20%",
+              }}
+            >
+              <ListGroup
+                items={genres}
+                selectedItem={selectedGenre}
+                onItemSelect={handleGenreSelect}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                p: 1,
+                m: 1,
+                flexGrow: 1,
+              }}
+            >
+              {user && (
+                <Button
+                  component={Link}
+                  to="/movies/new"
+                  variant="contained"
+                  sx={{ width: "8rem", mb: "10px" }}
+                >
+                  New Movie
+                </Button>
               )}
-            </div>
+              <p>
+                {count === 0
+                  ? "There are no movies in the database"
+                  : `Showing ${moviesToRender.length} movies from the database`}
+              </p>
+
+              <SearchBox onSearch={handleSearch} query={searchQuery} />
+
+              <div className="container">
+                {count !== 0 && moviesToRender && (
+                  <div className="container">
+                    <MoviesTable
+                      sortColumn={sortCol}
+                      movies={moviesToRender}
+                      onLike={onLikeToggle}
+                      onDelete={handleDelete}
+                      onSort={handleSort}
+                    />
+                    <Pagination
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
+                      page={currentPage}
+                    />
+                  </div>
+                )}
+              </div>
+            </Box>
           </Box>
-        </Box>
-      </div>
-    }
+        </div>
+      )}
     </>
   );
 }

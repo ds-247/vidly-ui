@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from '@mui/material';
+import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import '../../ComponentStyle/imageUpload.css';
+import "../../ComponentStyle/imageUpload.css";
 
-const ImageUpload = ({ data,onImageChange}) => {
+const ImageUpload = ({ data, onImageChange }) => {
   // const [imageData, setImageData] = useState(null);
 
   const handleImageChange = (e) => {
@@ -42,7 +42,6 @@ const ImageUpload = ({ data,onImageChange}) => {
           >
             Remove Image
           </Button>
-
         </div>
       ) : (
         <div>

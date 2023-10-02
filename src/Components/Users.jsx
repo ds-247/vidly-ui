@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUsers} from "../services/userService";
+import { getUsers } from "../services/userService";
 import {
   Table,
   TableBody,
@@ -26,7 +26,6 @@ function Users() {
     fetchData();
   }, []);
 
-  
   return (
     <TableContainer component={Paper}>
       <Table>

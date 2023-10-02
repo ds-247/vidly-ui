@@ -4,7 +4,7 @@ import NavBar from "./Components/NavBar";
 import Users from "./Components/Users";
 import MoviesForm from "./Components/MoviesForm";
 import NotFound from "./Components/NotFound";
-import GenresTable from './Components/GenresTable';
+import GenresTable from "./Components/GenresTable";
 import Rentals from "./Components/Rentals";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
@@ -32,13 +32,13 @@ function App() {
     fetchData();
   }, []);
 
-  // if (!user)
-  //   return (
-  //     <Router>
-  //       {" "}
-  //       <LoginForm />
-  //     </Router>
-  //   );
+  if (!user)
+    return (
+      <Router>
+        {" "}
+        <LoginForm />
+      </Router>
+    );
 
   return (
     <>

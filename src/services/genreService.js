@@ -5,8 +5,8 @@ export function getGenres() {
   return http.get(endPoint);
 }
 
-export function addGenre(genre){
-  const body = {name: genre};
+export function addGenre(genre) {
+  const body = { name: genre };
   return http.post(endPoint, body);
 }
 

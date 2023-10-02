@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Dialogue from "./common/Dialogue";
-import { getGenres, deleteGenre, updateGenre, addGenre } from "../services/genreService";
+import {
+  getGenres,
+  deleteGenre,
+  updateGenre,
+  addGenre,
+} from "../services/genreService";
 import Input from "./common/Input";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -19,18 +24,18 @@ const centerCellStyle = {
 };
 
 const flex = {
-  display : "flex",
-  alignItems: "center"
-}
+  display: "flex",
+  alignItems: "center",
+};
 
 const btn = {
-  height : "40px",
-  marginLeft: "20px"
-}
+  height: "40px",
+  marginLeft: "20px",
+};
 
 function GenresTable() {
   const [genres, setGenres] = useState([]);
-  const [newGenre,setNewGenre] = useState("");
+  const [newGenre, setNewGenre] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,14 +46,14 @@ function GenresTable() {
     fetchData();
   }, [genres]);
 
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     setNewGenre(e.target.value);
-  }
-  const handleGenreAdd = async ()=>{
-    if(newGenre.trim() !== ""){
+  };
+  const handleGenreAdd = async () => {
+    if (newGenre.trim() !== "") {
       await addGenre(newGenre);
     }
-  }
+  };
 
   const handleSave = async (index, genreId, newGenre) => {
     const originalGenres = genres;
@@ -129,8 +134,15 @@ function GenresTable() {
       </TableContainer>
 
       <div style={flex}>
-        <Input label={"New Genre..."} name={'genre'} value={newGenre} onChange={handleChange} ></Input>
-        <Button variant="contained" style={btn} onClick={handleGenreAdd}>Add Genre</Button>
+        <Input
+          label={"New Genre..."}
+          name={"genre"}
+          value={newGenre}
+          onChange={handleChange}
+        ></Input>
+        <Button variant="contained" style={btn} onClick={handleGenreAdd}>
+          Add Genre
+        </Button>
       </div>
     </>
   );

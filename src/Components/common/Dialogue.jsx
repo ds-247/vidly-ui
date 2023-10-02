@@ -6,13 +6,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function Dialogue({text, title, label, value, type, onSave}) {
+export default function Dialogue({ text, title, label, value, type, onSave }) {
   const [open, setOpen] = React.useState(false);
   const [textValue, setTextValue] = React.useState(value);
 
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     setTextValue(e.target.value);
-  }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -20,8 +20,8 @@ export default function Dialogue({text, title, label, value, type, onSave}) {
 
   const handleClose = (changed) => {
     setOpen(false);
-    if(changed && textValue.trim() !== ""){
-        onSave(textValue)
+    if (changed && textValue.trim() !== "") {
+      onSave(textValue);
     }
   };
 
@@ -46,14 +46,13 @@ export default function Dialogue({text, title, label, value, type, onSave}) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>handleClose(true)}>Change</Button>
-          <Button onClick={()=>handleClose(false)}>Cancel</Button>
+          <Button onClick={() => handleClose(true)}>Change</Button>
+          <Button onClick={() => handleClose(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 }
-
 
 Dialogue.defaultProps = {
   type: "text",

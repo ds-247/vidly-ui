@@ -4,7 +4,7 @@ import Joi from "joi-browser";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { getMovie, saveMovie } from "../services/movieService";
-import {getGenres} from "../services/genreService";
+import { getGenres } from "../services/genreService";
 import DropDown from "./common/DropDown";
 import ImageUpload from "./common/ImageUpload";
 
@@ -127,9 +127,9 @@ function MoviesForm({ match, history }) {
   };
 
   const handleImageChange = (base64String) => {
-    setData(prevAccount =>({
-      ...prevAccount, 
-      movieImage : base64String
+    setData((prevAccount) => ({
+      ...prevAccount,
+      movieImage: base64String,
     }));
   };
 

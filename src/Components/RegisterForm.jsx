@@ -11,7 +11,7 @@ function RegisterForm() {
     username: "",
     password: "",
     name: "",
-    contact:"",
+    contact: "",
   });
   const [error, setError] = useState({
     usernameError: false,

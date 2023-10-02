@@ -21,7 +21,7 @@ function NavBar({ user }) {
     { label: "Users", to: "/users" },
     { label: "Rentals", to: "/rentals" },
     { label: "Genres", to: "/genres" },
-    { label: "Register", to: "/register-form",},
+    { label: "Register", to: "/register-form" },
   ];
 
   const settings = [
