@@ -32,13 +32,13 @@ function App() {
     fetchData();
   }, []);
 
-  if (!user)
-    return (
-      <Router>
-        {" "}
-        <LoginForm />
-      </Router>
-    );
+  // if (!user)
+  //   return (
+  //     <Router>
+  //       {" "}
+  //       <LoginForm />
+  //     </Router>
+  //   );
 
   return (
     <>
